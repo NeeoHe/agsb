@@ -71,8 +71,8 @@ def install_requests():
             import requests
             logging.info("requests库安装成功")
         except Exception as e:
-            print(f"安装requests库失败: {e}")
-            print("请手动执行: pip install requests")
+            logging.info(f"安装requests库失败: {e}")
+            logging.info("请手动执行: pip install requests")
             return False
 
 
@@ -106,7 +106,7 @@ def download_file(url, target_path, mode='wb'):
             shutil.copyfileobj(response, out_file)
         return True
     except Exception as e:
-        logging.error(f"下载文件失败: {url}, 错误: {e}")  # 原 print 改为 error 级别
+        logging.error(f"下载文件失败: {url}, 错误: {e}")  # 原 logging.info 改为 error 级别
         write_debug_log(f"Download Error: {url}, {e}")
         return False
 
@@ -152,7 +152,7 @@ def write_debug_log(message):
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             f.write(f"[{timestamp}] {message}\n")
     except Exception as e:
-        print(f"写入日志失败: {e}")
+        logging.info(f"写入日志失败: {e}")
 
 # 下载二进制文件
 def download_binary(name, download_url, target_path):
@@ -292,43 +292,43 @@ def generate_links(domain, port_vm_ws, uuid_str):
     # ******** 终端输出部分 ********
 
     # === 第一部分：带框的信息摘要和带框的节点列表 ===
-    print("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
-    print("\033[36m│                \033[33m✨ ArgoSB 安装成功! ✨                    \033[36m│\033[0m")
-    print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
-    print(f"\033[36m│ \033[32m域名 (Domain): \033[0m{domain}")
-    print(f"\033[36m│ \033[32mUUID: \033[0m{uuid_str}")
-    print(f"\033[36m│ \033[32m本地Vmess端口 (Local VMess Port): \033[0m{port_vm_ws}")
-    print(f"\033[36m│ \033[32mWebSocket路径 (WS Path): \033[0m{ws_path_full}")
-    print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
-    print("\033[36m│ \033[33m所有节点链接 (带格式):\033[0m") # 标题
+    logging.info("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
+    logging.info("\033[36m│                \033[33m✨ ArgoSB 安装成功! ✨                    \033[36m│\033[0m")
+    logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+    logging.info(f"\033[36m│ \033[32m域名 (Domain): \033[0m{domain}")
+    logging.info(f"\033[36m│ \033[32mUUID: \033[0m{uuid_str}")
+    logging.info(f"\033[36m│ \033[32m本地Vmess端口 (Local VMess Port): \033[0m{port_vm_ws}")
+    logging.info(f"\033[36m│ \033[32mWebSocket路径 (WS Path): \033[0m{ws_path_full}")
+    logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+    logging.info("\033[36m│ \033[33m所有节点链接 (带格式):\033[0m") # 标题
     
     # 循环打印所有节点，每个节点带名称和颜色，在框内
     for i, link in enumerate(all_links):
         # 为了美观，可以加上颜色和序号/名称
-        print(f"\033[36m│ \033[32m{i+1}. {link_names[i]}:\033[0m") # 带名称
-        print(f"\033[36m│ \033[0m{link}")                      # 链接
+        logging.info(f"\033[36m│ \033[32m{i+1}. {link_names[i]}:\033[0m") # 带名称
+        logging.info(f"\033[36m│ \033[0m{link}")                      # 链接
         if i < len(all_links) - 1: # 如果不是最后一个节点，打印一个框内的空行作为分隔
-            print("\033[36m│ \033[0m") 
+            logging.info("\033[36m│ \033[0m") 
     
-    print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
-    print(f"\033[36m│ \033[32m详细节点信息及操作指南已保存到: \033[0m{LIST_FILE}")
-    print(f"\033[36m│ \033[32m单行节点列表 (纯链接) 已保存到: \033[0m{INSTALL_DIR / 'allnodes.txt'}")
-    print("\033[36m│ \033[32m使用 \033[33mpython3 " + os.path.basename(__file__) + " status\033[32m 查看详细状态和节点\033[0m")
-    print("\033[36m│ \033[32m使用 \033[33mpython3 " + os.path.basename(__file__) + " cat\033[32m 查看所有单行节点\033[0m")
-    print("\033[36m│ \033[32m使用 \033[33mpython3 " + os.path.basename(__file__) + " del\033[32m 删除所有节点\033[0m")
-    print("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
+    logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+    logging.info(f"\033[36m│ \033[32m详细节点信息及操作指南已保存到: \033[0m{LIST_FILE}")
+    logging.info(f"\033[36m│ \033[32m单行节点列表 (纯链接) 已保存到: \033[0m{INSTALL_DIR / 'allnodes.txt'}")
+    logging.info("\033[36m│ \033[32m使用 \033[33mpython3 " + os.path.basename(__file__) + " status\033[32m 查看详细状态和节点\033[0m")
+    logging.info("\033[36m│ \033[32m使用 \033[33mpython3 " + os.path.basename(__file__) + " cat\033[32m 查看所有单行节点\033[0m")
+    logging.info("\033[36m│ \033[32m使用 \033[33mpython3 " + os.path.basename(__file__) + " del\033[32m 删除所有节点\033[0m")
+    logging.info("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
     
     # === 第二部分：纯单行节点链接 ===
-    print() # 加一个空行，视觉上分隔开两个主要部分
-    print("\033[33m以下为所有节点的纯单行链接 (可直接复制):\033[0m")
-    print("\033[34m--------------------------------------------------------\033[0m") # 分隔线
+    logging.info() # 加一个空行，视觉上分隔开两个主要部分
+    logging.info("\033[33m以下为所有节点的纯单行链接 (可直接复制):\033[0m")
+    logging.info("\033[34m--------------------------------------------------------\033[0m") # 分隔线
 
     # 逐行打印所有节点链接，不带任何额外修饰
     for link in all_links:
-        print(link)
+        logging.info(link)
     
-    print("\033[34m--------------------------------------------------------\033[0m") # 结束分隔线
-    print() # 末尾再加一个空行
+    logging.info("\033[34m--------------------------------------------------------\033[0m") # 结束分隔线
+    logging.info() # 末尾再加一个空行
     
     write_debug_log(f"链接生成完毕，已保存并按两种格式打印到终端。")
     return True
@@ -346,7 +346,7 @@ def install(args):
     if not user_name:
         user_name = input("请输入用户名（用于上传文件名）: ").strip()
         if not user_name:
-            print("用户名不能为空！")
+            logging.info("用户名不能为空！")
             sys.exit(1)
     logging.info(f"使用用户名: {user_name}")
     write_debug_log(f"User: {user_name}")
@@ -355,7 +355,7 @@ def install(args):
     if not uuid_str:
         uuid_input = input("请输入自定义UUID (例如: 25bd7521-eed2-45a1-a50a-97e432552aca, 留空则随机生成): ").strip()
         uuid_str = uuid_input or str(uuid.uuid4())
-    print(f"使用 UUID: {uuid_str}")
+    logging.info(f"使用 UUID: {uuid_str}")
     write_debug_log(f"UUID: {uuid_str}")
     # Vmess Port (vmpt)
     port_vm_ws_str = str(args.vmpt) if args.vmpt else os.environ.get("vmpt") or str(PORT)
@@ -365,14 +365,14 @@ def install(args):
         try:
             port_vm_ws = int(port_vm_ws_str)
             if not (10000 <= port_vm_ws <= 65535):
-                print("端口号无效，将使用随机端口。")
+                logging.info("端口号无效，将使用随机端口。")
                 port_vm_ws = random.randint(10000, 65535)
         except ValueError:
-            print("端口输入非数字，将使用随机端口。")
+            logging.info("端口输入非数字，将使用随机端口。")
             port_vm_ws = random.randint(10000, 65535)
     else:
         port_vm_ws = random.randint(10000, 65535)
-    print(f"使用 Vmess 本地端口: {port_vm_ws}")
+    logging.info(f"使用 Vmess 本地端口: {port_vm_ws}")
     write_debug_log(f"Vmess Port: {port_vm_ws}")
     # Argo Tunnel Token (agk)
     argo_token = args.agk or os.environ.get("agk") or CF_TOKEN
@@ -380,10 +380,10 @@ def install(args):
         argo_token_input = input("请输入 Argo Tunnel Token (AGK) (例如: eyJhIjo...Ifs9, 若使用Cloudflare Zero Trust隧道请输入, 留空则使用临时隧道): ").strip()
         argo_token = argo_token_input or None # None if empty
     if argo_token:
-        print(f"使用 Argo Tunnel Token: ******{argo_token[-6:]}") # 仅显示末尾几位
+        logging.info(f"使用 Argo Tunnel Token: ******{argo_token[-6:]}") # 仅显示末尾几位
         write_debug_log(f"Argo Token: Present (not logged for security)")
     else:
-        print("未提供 Argo Tunnel Token，将使用临时隧道 (Quick Tunnel)。")
+        logging.info("未提供 Argo Tunnel Token，将使用临时隧道 (Quick Tunnel)。")
         write_debug_log("Argo Token: Not provided, using Quick Tunnel.")
     # Custom Domain (agn)
     custom_domain = args.agn or os.environ.get("agn") or DOMAIN
@@ -397,13 +397,13 @@ def install(args):
         custom_domain_input = input(domain_prompt).strip()
         custom_domain = custom_domain_input or None
     if custom_domain:
-        print(f"使用自定义域名: {custom_domain}")
+        logging.info(f"使用自定义域名: {custom_domain}")
         write_debug_log(f"Custom Domain (agn): {custom_domain}")
     elif argo_token: # 如果用了token，必须提供域名
         logging.error("\033[31m错误: 使用 Argo Tunnel Token 时必须提供自定义域名 (agn/--domain)。\033[0m")
         sys.exit(1)
     else:
-        print("未提供自定义域名，将尝试在隧道启动后自动获取。")
+        logging.info("未提供自定义域名，将尝试在隧道启动后自动获取。")
         write_debug_log("Custom Domain (agn): Not provided, will attempt auto-detection.")
     # --- 下载依赖 ---
     system = platform.system().lower()
@@ -415,33 +415,33 @@ def install(args):
         elif "armv7" in machine: arch = "arm" # cloudflared uses 'arm' for armv7
         else: arch = "amd64"
     else:
-        print(f"不支持的系统类型: {system}")
+        logging.info(f"不支持的系统类型: {system}")
         sys.exit(1)
     write_debug_log(f"检测到系统: {system}, 架构: {machine}, 使用架构标识: {arch}")
     # sing-box
     singbox_path = INSTALL_DIR / "sing-box"
     if not singbox_path.exists():
         try:
-            print("获取sing-box最新版本号...")
+            logging.info("获取sing-box最新版本号...")
             version_info = http_get("https://api.github.com/repos/SagerNet/sing-box/releases/latest")
             sb_version = json.loads(version_info)["tag_name"].lstrip("v") if version_info else "1.9.0-beta.11" # Fallback
-            print(f"sing-box 最新版本: {sb_version}")
+            logging.info(f"sing-box 最新版本: {sb_version}")
         except Exception as e:
             sb_version = "1.9.0-beta.11" # Fallback
-            print(f"获取最新版本失败，使用默认版本: {sb_version}，错误: {e}")
+            logging.info(f"获取最新版本失败，使用默认版本: {sb_version}，错误: {e}")
         sb_name = f"sing-box-{sb_version}-linux-{arch}"
         if arch == "arm": sb_name_actual = f"sing-box-{sb_version}-linux-armv7"
         else: sb_name_actual = sb_name
         sb_url = f"https://github.com/SagerNet/sing-box/releases/download/v{sb_version}/{sb_name_actual}.tar.gz"
         tar_path = INSTALL_DIR / "sing-box.tar.gz"
         if not download_file(sb_url, tar_path):
-            print("sing-box 下载失败，尝试使用备用地址")
+            logging.info("sing-box 下载失败，尝试使用备用地址")
             sb_url_backup = f"https://github.91chi.fun/https://github.com/SagerNet/sing-box/releases/download/v{sb_version}/{sb_name_actual}.tar.gz"
             if not download_file(sb_url_backup, tar_path):
-                print("sing-box 备用下载也失败，退出安装")
+                logging.info("sing-box 备用下载也失败，退出安装")
                 sys.exit(1)
         try:
-            print("正在解压sing-box...")
+            logging.info("正在解压sing-box...")
             import tarfile
             with tarfile.open(tar_path, "r:gz") as tar:
                 tar.extractall(path=INSTALL_DIR)
@@ -453,7 +453,7 @@ def install(args):
             tar_path.unlink()
             os.chmod(singbox_path, 0o755)
         except Exception as e:
-            print(f"解压或移动sing-box失败: {e}")
+            logging.info(f"解压或移动sing-box失败: {e}")
             if tar_path.exists(): tar_path.unlink()
             sys.exit(1)
     # cloudflared
@@ -463,10 +463,10 @@ def install(args):
         if arch == "armv7": cf_arch = "arm" # cloudflared uses 'arm' for 32-bit arm
         cf_url = f"https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-{cf_arch}"
         if not download_binary("cloudflared", cf_url, cloudflared_path):
-            print("cloudflared 下载失败，尝试使用备用地址")
+            logging.info("cloudflared 下载失败，尝试使用备用地址")
             cf_url_backup = f"https://github.91chi.fun/https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-{cf_arch}"
             if not download_binary("cloudflared", cf_url_backup, cloudflared_path):
-                print("cloudflared 备用下载也失败，退出安装")
+                logging.info("cloudflared 备用下载也失败，退出安装")
                 sys.exit(1)
     # --- 配置和启动 ---
     config_data = {
@@ -486,15 +486,15 @@ def install(args):
     start_services()
     final_domain = custom_domain
     if not argo_token and not custom_domain: # Quick tunnel and no pre-set domain
-        print("正在等待临时隧道域名生成...")
+        logging.info("正在等待临时隧道域名生成...")
         final_domain = get_tunnel_domain()
         if not final_domain:
-            print("\033[31m无法获取tunnel域名。请检查argo.log或尝试手动指定域名。\033[0m")
-            print("  方法1: python3 " + os.path.basename(__file__) + " --agn your-domain.com")
-            print("  方法2: export agn=your-domain.com && python3 " + os.path.basename(__file__))
+            logging.info("\033[31m无法获取tunnel域名。请检查argo.log或尝试手动指定域名。\033[0m")
+            logging.info("  方法1: python3 " + os.path.basename(__file__) + " --agn your-domain.com")
+            logging.info("  方法2: export agn=your-domain.com && python3 " + os.path.basename(__file__))
             sys.exit(1)
     elif argo_token and not custom_domain: # Should have exited earlier, but as a safeguard
-        print("\033[31m错误: 使用Argo Token时，自定义域名是必需的但未提供。\033[0m")
+        logging.info("\033[31m错误: 使用Argo Token时，自定义域名是必需的但未提供。\033[0m")
         sys.exit(1)
     if final_domain:
         # 生成所有节点链接
@@ -543,7 +543,7 @@ def install(args):
         # 继续原有的节点文件保存和打印逻辑
         generate_links(final_domain, port_vm_ws, uuid_str)
     else:
-        print("\033[31m最终域名未能确定，无法生成链接。\033[0m")
+        logging.info("\033[31m最终域名未能确定，无法生成链接。\033[0m")
         sys.exit(1)
 
 # 设置开机自启动
@@ -573,14 +573,14 @@ def setup_autostart():
         os.unlink(crontab_file_path)
             
         logging.info("已设置开机自启动")
-        print("开机自启动设置成功。")
+        logging.info("开机自启动设置成功。")
     except Exception as e:
         logging.error(f"设置开机自启动失败: {e}")
-        print(f"设置开机自启动失败: {e}。但不影响正常使用。")
+        logging.info(f"设置开机自启动失败: {e}。但不影响正常使用。")
 
 # 卸载脚本
 def uninstall():
-    print("开始卸载服务...")
+    logging.info("开始卸载服务...")
     
     # 停止服务
     for pid_file_path in [SB_PID_FILE, ARGO_PID_FILE]:
@@ -588,14 +588,14 @@ def uninstall():
             try:
                 pid = pid_file_path.read_text().strip()
                 if pid:
-                    print(f"正在停止进程 PID: {pid} (来自 {pid_file_path.name})")
+                    logging.info(f"正在停止进程 PID: {pid} (来自 {pid_file_path.name})")
                     os.system(f"kill {pid} 2>/dev/null || true")
             except Exception as e:
-                print(f"停止进程时出错 ({pid_file_path.name}): {e}")
+                logging.info(f"停止进程时出错 ({pid_file_path.name}): {e}")
     time.sleep(1) # 给进程一点时间退出
 
     # 强制停止 (如果还在运行)
-    print("尝试强制终止可能残留的 sing-box 和 cloudflared 进程...")
+    logging.info("尝试强制终止可能残留的 sing-box 和 cloudflared 进程...")
     os.system("pkill -9 -f 'sing-box run -c sb.json' 2>/dev/null || true")
     os.system("pkill -9 -f 'cloudflared tunnel --url' 2>/dev/null || true") # Quick Tunnel
     os.system("pkill -9 -f 'cloudflared tunnel --no-autoupdate run --token' 2>/dev/null || true") # Named Tunnel
@@ -617,48 +617,48 @@ def uninstall():
         
         if not new_crontab: # 如果清空了所有条目
             subprocess.run("crontab -r", shell=True, check=False) # check=False as it might error if no crontab exists
-            print("Crontab 清空 (或原有条目已移除)。")
+            logging.info("Crontab 清空 (或原有条目已移除)。")
         else:
             with tempfile.NamedTemporaryFile(mode='w', delete=False) as tmp_crontab_file:
                 tmp_crontab_file.write(new_crontab + "\n")
                 crontab_file_path = tmp_crontab_file.name
             subprocess.run(f"crontab {crontab_file_path}", shell=True, check=True)
             os.unlink(crontab_file_path)
-            print("Crontab 自启动项已移除。")
+            logging.info("Crontab 自启动项已移除。")
     except Exception as e:
-        print(f"移除crontab项时出错: {e}")
+        logging.info(f"移除crontab项时出错: {e}")
 
     # 删除安装目录
     if INSTALL_DIR.exists():
         try:
             shutil.rmtree(INSTALL_DIR)
-            print(f"安装目录 {INSTALL_DIR} 已删除。")
+            logging.info(f"安装目录 {INSTALL_DIR} 已删除。")
         except Exception as e:
-            print(f"无法完全删除安装目录 {INSTALL_DIR}: {e}。请手动删除。")
+            logging.info(f"无法完全删除安装目录 {INSTALL_DIR}: {e}。请手动删除。")
             
-    print("卸载完成。")
+    logging.info("卸载完成。")
     sys.exit(0)
 
 # 升级脚本
 def upgrade():
     script_url = "https://raw.githubusercontent.com/yonggekkk/argosb/main/agsb_custom_domain.py" # 假设这是最新脚本的地址
-    print(f"正在从 {script_url} 下载最新脚本...")
+    logging.info(f"正在从 {script_url} 下载最新脚本...")
     try:
         script_content = http_get(script_url)
         if script_content:
             script_path = Path(__file__).resolve()
             backup_path = script_path.with_suffix(script_path.suffix + ".bak")
             shutil.copyfile(script_path, backup_path) #备份旧脚本
-            print(f"旧脚本已备份到: {backup_path}")
+            logging.info(f"旧脚本已备份到: {backup_path}")
             
             with open(script_path, 'w', encoding='utf-8') as f:
                 f.write(script_content)
             os.chmod(script_path, 0o755)
-            print("\033[32m脚本升级完成！请重新运行脚本。\033[0m")
+            logging.info("\033[32m脚本升级完成！请重新运行脚本。\033[0m")
         else:
-            print("\033[31m升级失败，无法下载最新脚本。\033[0m")
+            logging.info("\033[31m升级失败，无法下载最新脚本。\033[0m")
     except Exception as e:
-        print(f"\033[31m升级过程中出错: {e}\033[0m")
+        logging.info(f"\033[31m升级过程中出错: {e}\033[0m")
     sys.exit(0)
 
 # 检查脚本运行状态
@@ -667,40 +667,40 @@ def check_status():
     cf_running = ARGO_PID_FILE.exists() and os.path.exists(f"/proc/{ARGO_PID_FILE.read_text().strip()}")
 
     if sb_running and cf_running and LIST_FILE.exists():
-        print("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
-        print("\033[36m│                \033[33m✨ ArgoSB 运行状态 ✨                    \033[36m│\033[0m")
-        print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
-        print("\033[36m│ \033[32m服务状态: \033[33m正在运行 (sing-box & cloudflared)\033[0m")
+        logging.info("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
+        logging.info("\033[36m│                \033[33m✨ ArgoSB 运行状态 ✨                    \033[36m│\033[0m")
+        logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+        logging.info("\033[36m│ \033[32m服务状态: \033[33m正在运行 (sing-box & cloudflared)\033[0m")
         
         domain_to_display = "未知"
         if CUSTOM_DOMAIN_FILE.exists():
             domain_to_display = CUSTOM_DOMAIN_FILE.read_text().strip()
-            print(f"\033[36m│ \033[32m当前使用域名: \033[0m{domain_to_display}")
+            logging.info(f"\033[36m│ \033[32m当前使用域名: \033[0m{domain_to_display}")
         elif CONFIG_FILE.exists(): # Fallback to config if custom_domain.txt not there
             config = json.loads(CONFIG_FILE.read_text())
             if config.get("custom_domain_agn"):
                  domain_to_display = config["custom_domain_agn"]
-                 print(f"\033[36m│ \033[32m配置域名 (agn): \033[0m{domain_to_display}")
+                 logging.info(f"\033[36m│ \033[32m配置域名 (agn): \033[0m{domain_to_display}")
             elif not config.get("argo_token") and LOG_FILE.exists(): # Quick tunnel, try log
                 log_content = LOG_FILE.read_text()
                 match = re.search(r'https://([a-zA-Z0-9.-]+\.trycloudflare\.com)', log_content)
                 if match:
                     domain_to_display = match.group(1)
-                    print(f"\033[36m│ \033[32mArgo临时域名: \033[0m{domain_to_display}")
+                    logging.info(f"\033[36m│ \033[32mArgo临时域名: \033[0m{domain_to_display}")
         
         if domain_to_display == "未知":
-             print("\033[36m│ \033[31m域名信息未找到或未生成，请检查配置或日志。\033[0m")
+             logging.info("\033[36m│ \033[31m域名信息未找到或未生成，请检查配置或日志。\033[0m")
 
-        print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+        logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
         if (INSTALL_DIR / "allnodes.txt").exists():
-            print("\033[36m│ \033[33m节点链接 (部分示例):\033[0m")
+            logging.info("\033[36m│ \033[33m节点链接 (部分示例):\033[0m")
             with open(INSTALL_DIR / "allnodes.txt", 'r') as f:
                 links = f.read().splitlines()
                 for i in range(min(3, len(links))):
-                    print(f"\033[36m│ \033[0m{links[i][:70]}...") # 打印部分链接
+                    logging.info(f"\033[36m│ \033[0m{links[i][:70]}...") # 打印部分链接
             if len(links) > 3:
-                print("\033[36m│ \033[32m... 更多节点请使用 'cat' 命令查看 ...\033[0m")
-        print("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
+                logging.info("\033[36m│ \033[32m... 更多节点请使用 'cat' 命令查看 ...\033[0m")
+        logging.info("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
         return True
     
     status_msgs = []
@@ -708,18 +708,18 @@ def check_status():
     if not cf_running: status_msgs.append("cloudflared 未运行")
     if not LIST_FILE.exists(): status_msgs.append("节点信息文件未生成")
 
-    print("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
-    print("\033[36m│                \033[33m✨ ArgoSB 运行状态 ✨                    \033[36m│\033[0m")
-    print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+    logging.info("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
+    logging.info("\033[36m│                \033[33m✨ ArgoSB 运行状态 ✨                    \033[36m│\033[0m")
+    logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
     if status_msgs:
-        print("\033[36m│ \033[31mArgoSB 服务异常:\033[0m")
+        logging.info("\033[36m│ \033[31mArgoSB 服务异常:\033[0m")
         for msg in status_msgs:
-            print(f"\033[36m│   - {msg}\033[0m")
-        print("\033[36m│ \033[32m尝试重新安装或检查日志: \033[33mpython3 " + os.path.basename(__file__) + " install\033[0m")
+            logging.info(f"\033[36m│   - {msg}\033[0m")
+        logging.info("\033[36m│ \033[32m尝试重新安装或检查日志: \033[33mpython3 " + os.path.basename(__file__) + " install\033[0m")
     else: # Should be caught by first if, but as a fallback
-         print("\033[36m│ \033[31mArgoSB 未运行或配置不完整。\033[0m")
-         print("\033[36m│ \033[32m运行 \033[33mpython3 " + os.path.basename(__file__) + "\033[32m 开始安装。\033[0m")
-    print("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
+         logging.info("\033[36m│ \033[31mArgoSB 未运行或配置不完整。\033[0m")
+         logging.info("\033[36m│ \033[32m运行 \033[33mpython3 " + os.path.basename(__file__) + "\033[32m 开始安装。\033[0m")
+    logging.info("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
     return False
 
 
@@ -751,7 +751,7 @@ def create_sing_box_config(port_vm_ws, uuid_str):
 # 创建启动脚本
 def create_startup_script():
     if not CONFIG_FILE.exists():
-        print("配置文件 config.json 不存在，无法创建启动脚本。请先执行安装。")
+        logging.info("配置文件 config.json 不存在，无法创建启动脚本。请先执行安装。")
         return
 
     config = json.loads(CONFIG_FILE.read_text())
@@ -792,13 +792,13 @@ echo $! > {ARGO_PID_FILE.name}
 
 # 启动服务
 def start_services():
-    print("正在启动sing-box服务...")
+    logging.info("正在启动sing-box服务...")
     subprocess.run(str(INSTALL_DIR / "start_sb.sh"), shell=True)
     
-    print("正在启动cloudflared服务...")
+    logging.info("正在启动cloudflared服务...")
     subprocess.run(str(INSTALL_DIR / "start_cf.sh"), shell=True)
     
-    print("等待服务启动 (约5秒)...")
+    logging.info("等待服务启动 (约5秒)...")
     time.sleep(5)
     write_debug_log("服务启动命令已执行。")
 
@@ -814,13 +814,13 @@ def get_tunnel_domain():
                 if match:
                     domain = match.group(1)
                     write_debug_log(f"从日志中提取到临时域名: {domain}")
-                    print(f"获取到临时域名: {domain}")
+                    logging.info(f"获取到临时域名: {domain}")
                     return domain
             except Exception as e:
                 write_debug_log(f"读取或解析日志文件 {LOG_FILE} 出错: {e}")
         
         retry_count += 1
-        print(f"等待tunnel域名生成... (尝试 {retry_count}/{max_retries}, 检查 {LOG_FILE})")
+        logging.info(f"等待tunnel域名生成... (尝试 {retry_count}/{max_retries}, 检查 {LOG_FILE})")
         time.sleep(3) # 每次等待3秒
     
     write_debug_log("获取tunnel域名超时。")
@@ -848,7 +848,7 @@ def upload_to_api(subscription_content, user_name):
                 f.write(subscription_content)
         except Exception as e:
             write_debug_log(f"创建临时文件失败: {e}")
-            print(f"创建临时文件失败: {e}")
+            logging.info(f"创建临时文件失败: {e}")
             return False
         # 构建multipart表单数据
         try:
@@ -866,26 +866,26 @@ def upload_to_api(subscription_content, user_name):
                     if result.get('success') or result.get('url'):
                         url = result.get('url', '')
                         write_debug_log(f"上传成功，URL: {url}")
-                        print(f"\033[36m│ \033[32m订阅已成功上传，URL: {url}\033[0m")
+                        logging.info(f"\033[36m│ \033[32m订阅已成功上传，URL: {url}\033[0m")
                         url_file = INSTALL_DIR / "subscription_url.txt"
                         with open(str(url_file), 'w') as f:
                             f.write(url)
                         return True
                     else:
                         write_debug_log(f"API返回错误: {result}")
-                        print(f"API返回错误: {result}")
+                        logging.info(f"API返回错误: {result}")
                         return False
                 except Exception as e:
                     write_debug_log(f"解析API响应失败: {e}")
-                    print(f"解析API响应失败: {e}")
+                    logging.info(f"解析API响应失败: {e}")
                     return False
             else:
                 write_debug_log(f"上传失败，状态码: {response.status_code}")
-                print(f"上传失败，状态码: {response.status_code}")
+                logging.info(f"上传失败，状态码: {response.status_code}")
                 return False
         except Exception as e:
             write_debug_log(f"上传过程中出错: {e}")
-            print(f"上传过程中出错: {e}")
+            logging.info(f"上传过程中出错: {e}")
             if os.path.exists(str(temp_file)):
                 try:
                     os.remove(str(temp_file))
@@ -894,12 +894,12 @@ def upload_to_api(subscription_content, user_name):
             return False
     except Exception as e:
         write_debug_log(f"上传订阅到API服务器失败: {e}")
-        print(f"上传订阅到API服务器失败: {e}")
+        logging.info(f"上传订阅到API服务器失败: {e}")
         return False
 
 # 主函数
 def main():
-    print_info()  # 此处保留print_info的print替换为logging的实现
+    print_info()  # 此处保留print_info的logging.info替换为logging的实现
     args = parse_args()
 
     if args.action == "install":
@@ -913,19 +913,19 @@ def main():
     elif args.action == "cat":
         all_nodes_path = INSTALL_DIR / "allnodes.txt"
         if all_nodes_path.exists():
-            print(all_nodes_path.read_text().strip())
+            logging.info(all_nodes_path.read_text().strip())
         else:
-            print(f"\033[31m节点文件 {all_nodes_path} 未找到。请先安装或运行 status。\033[0m")
+            logging.info(f"\033[31m节点文件 {all_nodes_path} 未找到。请先安装或运行 status。\033[0m")
     else: # 默认行为，通常是 'install' 或者检查后提示
         if INSTALL_DIR.exists() and CONFIG_FILE.exists() and SB_PID_FILE.exists() and ARGO_PID_FILE.exists():
-            print("\033[33m检测到ArgoSB可能已安装并正在运行。\033[0m")
+            logging.info("\033[33m检测到ArgoSB可能已安装并正在运行。\033[0m")
             if check_status():
-                 print("\033[32m如需重新安装，请先执行卸载: python3 " + os.path.basename(__file__) + " del\033[0m")
+                 logging.info("\033[32m如需重新安装，请先执行卸载: python3 " + os.path.basename(__file__) + " del\033[0m")
             else:
-                print("\033[31m服务状态异常，建议尝试重新安装。\033[0m")
+                logging.info("\033[31m服务状态异常，建议尝试重新安装。\033[0m")
                 install(args) # 尝试重新安装
         else:
-            print("\033[33m未检测到完整安装，开始执行安装流程...\033[0m")
+            logging.info("\033[33m未检测到完整安装，开始执行安装流程...\033[0m")
             install(args)
 
 if __name__ == "__main__":
@@ -936,13 +936,13 @@ if __name__ == "__main__":
     if len(sys.argv) == 1: # 如果只运行脚本名，没有其他参数
         # 检查是否已安装，如果已安装且在运行，显示status，否则进行安装
         if INSTALL_DIR.exists() and CONFIG_FILE.exists() and SB_PID_FILE.exists() and ARGO_PID_FILE.exists():
-            print(f"\033[33m检测到 ArgoSB 可能已安装。显示当前状态。\033[0m")
-            print(f"\033[33m如需重新安装，请运行: python3 {script_name} install\033[0m")
-            print(f"\033[33m如需卸载，请运行: python3 {script_name} del\033[0m")
+            logging.info(f"\033[33m检测到 ArgoSB 可能已安装。显示当前状态。\033[0m")
+            logging.info(f"\033[33m如需重新安装，请运行: python3 {script_name} install\033[0m")
+            logging.info(f"\033[33m如需卸载，请运行: python3 {script_name} del\033[0m")
             check_status()
         else:
-            print(f"\033[33m未检测到安装或运行中的服务，将引导进行安装。\033[0m")
-            print(f"\033[33m你可以通过 'python3 {script_name} --help' 查看所有选项。\033[0m")
+            logging.info(f"\033[33m未检测到安装或运行中的服务，将引导进行安装。\033[0m")
+            logging.info(f"\033[33m你可以通过 'python3 {script_name} --help' 查看所有选项。\033[0m")
             args = parse_args() # 解析空参数，会得到默认的 "install" action
             install(args) # 调用安装函数
     else:
