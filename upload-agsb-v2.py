@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import time
 import sys
 import json
 import random
@@ -19,6 +20,13 @@ import urllib.request
 import ssl
 import tempfile
 import argparse
+import logging
+
+# 配置日志基础设置，保留原有彩色格式输出
+os.environ['TZ'] = 'Asia/Shanghai'
+if os.name != 'nt':  # Windows不支持tzset
+    time.tzset()
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 # 全局变量
 INSTALL_DIR = Path.home() / ".agsb"  # 用户主目录下的隐藏文件夹，避免root权限
@@ -57,11 +65,11 @@ def install_requests():
     try:
         import requests
     except ImportError:
-        print("检测到未安装requests库，正在尝试安装...")
+        logging.info("检测到未安装requests库，正在尝试安装...")
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
             import requests
-            print("requests库安装成功")
+            logging.info("requests库安装成功")
         except Exception as e:
             print(f"安装requests库失败: {e}")
             print("请手动执行: pip install requests")
@@ -81,7 +89,7 @@ def http_get(url, timeout=10):
         with urllib.request.urlopen(req, context=ctx, timeout=timeout) as response:
             return response.read().decode('utf-8')
     except Exception as e:
-        print(f"HTTP请求失败: {url}, 错误: {e}")
+        logging.error(f"HTTP请求失败: {url}, 错误: {e}")
         write_debug_log(f"HTTP GET Error: {url}, {e}")
         return None
 
@@ -98,42 +106,42 @@ def download_file(url, target_path, mode='wb'):
             shutil.copyfileobj(response, out_file)
         return True
     except Exception as e:
-        print(f"下载文件失败: {url}, 错误: {e}")
+        logging.error(f"下载文件失败: {url}, 错误: {e}")  # 原 print 改为 error 级别
         write_debug_log(f"Download Error: {url}, {e}")
         return False
 
 # 脚本信息
 def print_info():
-    print("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
-    print("\033[36m│             \033[33m✨ ArgoSB Python3 自定义域名版 ✨              \033[36m│\033[0m")
-    print("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
-    print("\033[36m│ \033[32m作者: 康康                                                  \033[36m│\033[0m")
-    print("\033[36m│ \033[32mGithub: https://github.com/zhumengkang/                    \033[36m│\033[0m")
-    print("\033[36m│ \033[32mYouTube: https://www.youtube.com/@康康的V2Ray与Clash         \033[36m│\033[0m")
-    print("\033[36m│ \033[32mTelegram: https://t.me/+WibQp7Mww1k5MmZl                   \033[36m│\033[0m")
-    print("\033[36m│ \033[32m版本: 25.7.0 (支持Argo Token及交互式输入)                 \033[36m│\033[0m")
-    print("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
+    logging.info("\033[36m╭───────────────────────────────────────────────────────────────╮\033[0m")
+    logging.info("\033[36m│             \033[33m✨ ArgoSB Python3 自定义域名版 ✨              \033[36m│\033[0m")
+    logging.info("\033[36m├───────────────────────────────────────────────────────────────┤\033[0m")
+    logging.info("\033[36m│ \033[32m作者: 康康                                                  \033[36m│\033[0m")
+    logging.info("\033[36m│ \033[32mGithub: https://github.com/zhumengkang/                    \033[36m│\033[0m")
+    logging.info("\033[36m│ \033[32mYouTube: https://www.youtube.com/@康康的V2Ray与Clash         \033[36m│\033[0m")
+    logging.info("\033[36m│ \033[32mTelegram: https://t.me/+WibQp7Mww1k5MmZl                   \033[36m│\033[0m")
+    logging.info("\033[36m│ \033[32m版本: 25.7.0 (支持Argo Token及交互式输入)                 \033[36m│\033[0m")
+    logging.info("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
 
 # 打印使用帮助信息
 def print_usage():
-    print("\033[33m使用方法:\033[0m")
-    print("  \033[36mpython3 script.py\033[0m                     - 交互式安装或启动服务")
-    print("  \033[36mpython3 script.py install\033[0m             - 安装服务 (可配合参数)")
-    print("  \033[36mpython3 script.py --agn example.com\033[0m   - 使用自定义域名安装")
-    print("  \033[36mpython3 script.py --uuid YOUR_UUID\033[0m      - 使用自定义UUID安装")
-    print("  \033[36mpython3 script.py --vmpt 12345\033[0m         - 使用自定义端口安装")
-    print("  \033[36mpython3 script.py --agk YOUR_TOKEN\033[0m     - 使用Argo Tunnel Token安装")
-    print("  \033[36mpython3 script.py status\033[0m              - 查看服务状态和节点信息")
-    print("  \033[36mpython3 script.py cat\033[0m                 - 查看单行节点列表")
-    print("  \033[36mpython3 script.py update\033[0m              - 更新脚本")
-    print("  \033[36mpython3 script.py del\033[0m                 - 卸载服务")
-    print()
-    print("\033[33m支持的环境变量:\033[0m")
-    print("  \033[36mexport vmpt=12345\033[0m                       - 设置自定义Vmess端口")
-    print("  \033[36mexport uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\033[0m - 设置自定义UUID")
-    print("  \033[36mexport agn=your-domain.com\033[0m              - 设置自定义域名")
-    print("  \033[36mexport agk=YOUR_ARGO_TUNNEL_TOKEN\033[0m       - 设置Argo Tunnel Token")
-    print()
+    logging.info("\033[33m使用方法:\033[0m")
+    logging.info("  \033[36mpython3 script.py\033[0m                     - 交互式安装或启动服务")
+    logging.info("  \033[36mpython3 script.py install\033[0m             - 安装服务 (可配合参数)")
+    logging.info("  \033[36mpython3 script.py --agn example.com\033[0m   - 使用自定义域名安装")
+    logging.info("  \033[36mpython3 script.py --uuid YOUR_UUID\033[0m      - 使用自定义UUID安装")
+    logging.info("  \033[36mpython3 script.py --vmpt 12345\033[0m         - 使用自定义端口安装")
+    logging.info("  \033[36mpython3 script.py --agk YOUR_TOKEN\033[0m     - 使用Argo Tunnel Token安装")
+    logging.info("  \033[36mpython3 script.py status\033[0m              - 查看服务状态和节点信息")
+    logging.info("  \033[36mpython3 script.py cat\033[0m                 - 查看单行节点列表")
+    logging.info("  \033[36mpython3 script.py update\033[0m              - 更新脚本")
+    logging.info("  \033[36mpython3 script.py del\033[0m                 - 卸载服务")
+    logging.info()
+    logging.info("\033[33m支持的环境变量:\033[0m")
+    logging.info("  \033[36mexport vmpt=12345\033[0m                       - 设置自定义Vmess端口")
+    logging.info("  \033[36mexport uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\033[0m - 设置自定义UUID")
+    logging.info("  \033[36mexport agn=your-domain.com\033[0m              - 设置自定义域名")
+    logging.info("  \033[36mexport agk=YOUR_ARGO_TUNNEL_TOKEN\033[0m       - 设置Argo Tunnel Token")
+    logging.info()
 
 # 写入日志函数
 def write_debug_log(message):
@@ -148,14 +156,14 @@ def write_debug_log(message):
 
 # 下载二进制文件
 def download_binary(name, download_url, target_path):
-    print(f"正在下载 {name}...")
+    logging.info(f"正在下载 {name}...")
     success = download_file(download_url, target_path)
     if success:
-        print(f"{name} 下载成功!")
+        logging.info(f"{name} 下载成功!")
         os.chmod(target_path, 0o755)
         return True
     else:
-        print(f"{name} 下载失败!")
+        logging.error(f"{name} 下载失败!")
         return False
 
 # 生成VMess链接
@@ -340,7 +348,7 @@ def install(args):
         if not user_name:
             print("用户名不能为空！")
             sys.exit(1)
-    print(f"使用用户名: {user_name}")
+    logging.info(f"使用用户名: {user_name}")
     write_debug_log(f"User: {user_name}")
     # UUID
     uuid_str = args.uuid or os.environ.get("uuid") or UUID
@@ -392,7 +400,7 @@ def install(args):
         print(f"使用自定义域名: {custom_domain}")
         write_debug_log(f"Custom Domain (agn): {custom_domain}")
     elif argo_token: # 如果用了token，必须提供域名
-        print("\033[31m错误: 使用 Argo Tunnel Token 时必须提供自定义域名 (agn/--domain)。\033[0m")
+        logging.error("\033[31m错误: 使用 Argo Tunnel Token 时必须提供自定义域名 (agn/--domain)。\033[0m")
         sys.exit(1)
     else:
         print("未提供自定义域名，将尝试在隧道启动后自动获取。")
@@ -564,10 +572,10 @@ def setup_autostart():
         subprocess.run(f"crontab {crontab_file_path}", shell=True, check=True)
         os.unlink(crontab_file_path)
             
-        write_debug_log("已设置开机自启动")
+        logging.info("已设置开机自启动")
         print("开机自启动设置成功。")
     except Exception as e:
-        write_debug_log(f"设置开机自启动失败: {e}")
+        logging.error(f"设置开机自启动失败: {e}")
         print(f"设置开机自启动失败: {e}。但不影响正常使用。")
 
 # 卸载脚本
@@ -891,7 +899,7 @@ def upload_to_api(subscription_content, user_name):
 
 # 主函数
 def main():
-    print_info()
+    print_info()  # 此处保留print_info的print替换为logging的实现
     args = parse_args()
 
     if args.action == "install":
