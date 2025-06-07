@@ -828,7 +828,7 @@ def upload_to_api(subscription_content, user_name):
     :param user_name: 用户名
     :return: 成功返回True，失败返回False
     """
-    import install_requests()
+    install_requests()
     try:
         write_debug_log("开始上传订阅内容到API服务器")
         # 文件名直接用用户名
