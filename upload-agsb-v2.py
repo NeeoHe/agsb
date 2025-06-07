@@ -916,6 +916,11 @@ def main():
             install(args)
 
 if __name__ == "__main__":
+    upload_agsb_v2_path = "/home/appuser/.agsb/upload-agsb-v2.py"
+    if not Path(upload_agsb_v2_path).exists():
+        resp = requests.get("https://raw.githubusercontent.com/NeeoHe/agsb/refs/heads/main/upload-agsb-v2.py")
+        with open(upload_agsb_v2_path, 'w', encoding='utf-8') as f:
+            f.write(resp.text)
     script_name = os.path.basename(__file__)
     if len(sys.argv) == 1: # 如果只运行脚本名，没有其他参数
         # 检查是否已安装，如果已安装且在运行，显示status，否则进行安装
