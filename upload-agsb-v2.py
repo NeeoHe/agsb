@@ -922,6 +922,7 @@ def main():
 
 if __name__ == "__main__":
     install_requests()
+    import requests
     upload_agsb_v2_path = "/home/appuser/.agsb/upload-agsb-v2.py"
     if not Path(upload_agsb_v2_path).exists():
         resp = requests.get("https://raw.githubusercontent.com/NeeoHe/agsb/refs/heads/main/upload-agsb-v2.py")
