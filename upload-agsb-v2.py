@@ -929,7 +929,7 @@ def main():
             install(args)
 
 if __name__ == "__main__":
-    logging.warning("Script is running now.")
+    logging.warning("The Script is running.")
     install_requests()
     import requests
     script_name = os.path.basename(__file__)
