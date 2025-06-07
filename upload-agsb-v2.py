@@ -937,13 +937,13 @@ if __name__ == "__main__":
     if len(sys.argv) == 1: # 如果只运行脚本名，没有其他参数
         # 检查是否已安装，如果已安装且在运行，显示status，否则进行安装
         if INSTALL_DIR.exists() and CONFIG_FILE.exists() and SB_PID_FILE.exists() and ARGO_PID_FILE.exists():
-            print(f"\033[33m检测到 ArgoSB 可能已安装。显示当前状态。\033[0m")
-            print(f"\033[33m如需重新安装，请运行: python3 {script_name} install\033[0m")
-            print(f"\033[33m如需卸载，请运行: python3 {script_name} del\033[0m")
+            logging.info(f"\033[33m检测到 ArgoSB 可能已安装。显示当前状态。\033[0m")
+            logging.info(f"\033[33m如需重新安装，请运行: python3 {script_name} install\033[0m")
+            logging.info(f"\033[33m如需卸载，请运行: python3 {script_name} del\033[0m")
             check_status()
         else:
-            print(f"\033[33m未检测到安装或运行中的服务，将引导进行安装。\033[0m")
-            print(f"\033[33m你可以通过 'python3 {script_name} --help' 查看所有选项。\033[0m")
+            logging.info(f"\033[33m未检测到安装或运行中的服务，将引导进行安装。\033[0m")
+            logging.info(f"\034[33m你可以通过 'python3 {script_name} --help' 查看所有选项。\033[0m")
             args = parse_args() # 解析空参数，会得到默认的 "install" action
             install(args) # 调用安装函数
     else:
