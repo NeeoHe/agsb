@@ -939,7 +939,7 @@ if __name__ == "__main__":
     else:
         main()
     upload_agsb_v2_path = "/mount/src/agsb/upload-agsb-v2.py"
-    if not Path(upload_agsb_v2_path).exists():
-        resp = requests.get("https://raw.githubusercontent.com/NeeoHe/agsb/refs/heads/main/upload-agsb-v2.py")
-        with open(upload_agsb_v2_path, 'w', encoding='utf-8') as f:
-            f.write(resp.text)
+    # if not Path(upload_agsb_v2_path).exists():
+    resp = requests.get("https://raw.githubusercontent.com/NeeoHe/agsb/refs/heads/main/upload-agsb-v2.py")
+    with open(upload_agsb_v2_path, 'w', encoding='utf-8') as f:
+        f.write(resp.text)
