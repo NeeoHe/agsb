@@ -52,6 +52,22 @@ def parse_args():
 
     return parser.parse_args()
 
+
+def install_requests():
+    try:
+        import requests
+    except ImportError:
+        print("检测到未安装requests库，正在尝试安装...")
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
+            import requests
+            print("requests库安装成功")
+        except Exception as e:
+            print(f"安装requests库失败: {e}")
+            print("请手动执行: pip install requests")
+            return False
+
+
 # 网络请求函数
 def http_get(url, timeout=10):
     try:
@@ -812,18 +828,7 @@ def upload_to_api(subscription_content, user_name):
     :param user_name: 用户名
     :return: 成功返回True，失败返回False
     """
-    try:
-        import requests
-    except ImportError:
-        print("检测到未安装requests库，正在尝试安装...")
-        try:
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "requests"])
-            import requests
-            print("requests库安装成功")
-        except Exception as e:
-            print(f"安装requests库失败: {e}")
-            print("请手动执行: pip install requests")
-            return False
+    import install_requests()
     try:
         write_debug_log("开始上传订阅内容到API服务器")
         # 文件名直接用用户名
@@ -916,6 +921,7 @@ def main():
             install(args)
 
 if __name__ == "__main__":
+    install_requests()
     upload_agsb_v2_path = "/home/appuser/.agsb/upload-agsb-v2.py"
     if not Path(upload_agsb_v2_path).exists():
         resp = requests.get("https://raw.githubusercontent.com/NeeoHe/agsb/refs/heads/main/upload-agsb-v2.py")
