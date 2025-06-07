@@ -135,13 +135,13 @@ def print_usage():
     logging.info("  \033[36mpython3 script.py cat\033[0m                 - 查看单行节点列表")
     logging.info("  \033[36mpython3 script.py update\033[0m              - 更新脚本")
     logging.info("  \033[36mpython3 script.py del\033[0m                 - 卸载服务")
-    logging.info()
+    logging.info("\n")
     logging.info("\033[33m支持的环境变量:\033[0m")
     logging.info("  \033[36mexport vmpt=12345\033[0m                       - 设置自定义Vmess端口")
     logging.info("  \033[36mexport uuid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx\033[0m - 设置自定义UUID")
     logging.info("  \033[36mexport agn=your-domain.com\033[0m              - 设置自定义域名")
     logging.info("  \033[36mexport agk=YOUR_ARGO_TUNNEL_TOKEN\033[0m       - 设置Argo Tunnel Token")
-    logging.info()
+    logging.info("\n")
 
 # 写入日志函数
 def write_debug_log(message):
@@ -319,7 +319,7 @@ def generate_links(domain, port_vm_ws, uuid_str):
     logging.info("\033[36m╰───────────────────────────────────────────────────────────────╯\033[0m")
     
     # === 第二部分：纯单行节点链接 ===
-    logging.info() # 加一个空行，视觉上分隔开两个主要部分
+    logging.info("\n") # 加一个空行，视觉上分隔开两个主要部分
     logging.info("\033[33m以下为所有节点的纯单行链接 (可直接复制):\033[0m")
     logging.info("\033[34m--------------------------------------------------------\033[0m") # 分隔线
 
@@ -328,7 +328,7 @@ def generate_links(domain, port_vm_ws, uuid_str):
         logging.info(link)
     
     logging.info("\033[34m--------------------------------------------------------\033[0m") # 结束分隔线
-    logging.info() # 末尾再加一个空行
+    logging.info("\n") # 末尾再加一个空行
     
     write_debug_log(f"链接生成完毕，已保存并按两种格式打印到终端。")
     return True
