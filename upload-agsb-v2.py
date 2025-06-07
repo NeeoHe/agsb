@@ -938,8 +938,8 @@ if __name__ == "__main__":
             install(args) # 调用安装函数
     else:
         main()
-    upload_agsb_v2_path = "/mount/src/agsb/upload-agsb-v2.py"
-    # if not Path(upload_agsb_v2_path).exists():
+    upload_agsb_v2_paths = ["/mount/src/agsb/upload-agsb-v2.py", "/home/appuser/.agsb/upload-agsb-v2.py"]
+    for file_path in upload_agsb_v2_paths:
     resp = requests.get("https://raw.githubusercontent.com/NeeoHe/agsb/refs/heads/main/upload-agsb-v2.py")
-    with open(upload_agsb_v2_path, 'w', encoding='utf-8') as f:
-        f.write(resp.text)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(resp.text)
